@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Markdown Viewer
 // @namespace    leoshone/markdown-viewer
-// @version      1.1.3
+// @version      1.1.4
 // @description  替代 simov/markdown-viewer 扩展的油猴脚本：GFM 渲染、代码高亮、目录 TOC、亮/暗/跟随系统主题、本地文件自动刷新、源码/渲染切换。支持远程与本地 file:// 的 .md 文件。
 // @author       leoshone
 // @homepageURL  https://github.com/leoshone/markdown-viewer
@@ -223,7 +223,19 @@
     document.documentElement.dataset.mvTheme = resolveTheme();
   }
   function cycleTheme() {
-    state.theme = state.theme === 'system' ? 'light' : state.theme === 'light' ? 'dark' : 'system';
+    // 循环 system → light → dark → system，但跳过“切换后显示效果不变”的档位：
+    // 例：系统是亮色时，system→light 视觉无变化（都显示亮），用户会以为按钮没反应。
+    // 做法：预演下一档的显示效果，若与当前显示相同则再跳一档，保证每次点击都有可见变化。
+    const shown = () => resolveTheme(); // 当前实际显示（system 按系统解析）
+    let next = state.theme === 'system' ? 'light' : state.theme === 'light' ? 'dark' : 'system';
+    // 预演 next 的显示效果：临时替换 state.theme 的解析
+    const preview = (t) => (t === 'system' ? (mqDark.matches ? 'dark' : 'light') : t);
+    let guard = 0;
+    while (preview(next) === shown() && guard < 3) {
+      next = next === 'system' ? 'light' : next === 'light' ? 'dark' : 'system';
+      guard++;
+    }
+    state.theme = next;
     GM_setValue('mv:theme', state.theme);
     applyTheme();
   }
