@@ -19,7 +19,7 @@
 1. 浏览器装好 [暴力猴](https://chromewebstore.google.com/detail/violentmonkey/jinjaccalgkegednnccohejagnlnfdag) 或 Tampermonkey。
 2. 点击安装（暴力猴会弹出确认页）：
    **[https://raw.githubusercontent.com/leoshone/markdown-viewer/main/markdown-viewer.user.js](https://raw.githubusercontent.com/leoshone/markdown-viewer/main/markdown-viewer.user.js)**
-3. **关键一步**（否则本地文件不渲染）：`chrome://extensions` → 暴力猴 → 详细信息 → 打开**「允许访问文件网址」**。
+3. **关键一步**（否则本地文件不渲染）：`chrome://extensions` → 暴力猴 → 详细信息 → 打开「允许访问文件网址」。
 
 ## 使用
 
